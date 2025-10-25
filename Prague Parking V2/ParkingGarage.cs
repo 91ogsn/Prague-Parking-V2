@@ -9,18 +9,23 @@ namespace Prague_Parking_V2
     {
         // Properties
         public List<ParkingSpot> Garage { get; set; } //TODO: Vi behöver läsa in konfiguration från fil och spara här i något lämpligt objekt
-
+        public Config Config;
         public int Size { get; set; }
         // Constructor
-        public ParkingGarage()
+        public ParkingGarage(Config config)
         {
-            Size = 100; //TODO: Storleken på garaget skall hämtas från konfigfil
-            Garage = new List<ParkingSpot>(capacity: Size);
+            Config = config;
+            Size = config.GarageNrOfSpots; //Storleken på garaget hämtas från konfigfil
+            Garage = new List<ParkingSpot>(Size);
             for (int i = 1; i <= Size; i++)
             {
                 Garage.Add(new ParkingSpot(spotNumber: i));
             }
         }
+        
+        // Metoder
+        
+
         /* TODO: P-huset behöver publika metoder för:
         * Parkera ett fordon
         * Hämta ut ett fordon
@@ -33,6 +38,7 @@ namespace Prague_Parking_V2
         * Skapa ett fordon
         * Ta fram ett fordon, givet ett regnummer (variant på sökning)
         */
+
 
     }
 }

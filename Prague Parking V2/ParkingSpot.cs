@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prague_Parking_V2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +9,17 @@ namespace Prague_Parking_V2
     public class ParkingSpot
     {
         // Properties
-        public int Size { get; set; }
-        public int AvailableSize { get; set; }
-        public int SpotNumber { get; set; }
+        public int SpotNumber { get; set; } // P-platsens nummer
+        public int SpotSize { get; set; } = 4; // Storlek på P-platsen i antal parkeringsenheter
+        public int AvailableSize { get; set; } = 4; // Tillgänglig storlek på P-platsen
+
         public List<Vehicle> ParkedVehicles { get; set; }
 
         // Constructor
         public ParkingSpot(int spotNumber)
         {
             SpotNumber = spotNumber;
-            AvailableSize = Size;
+            AvailableSize = SpotSize;
             ParkedVehicles = new List<Vehicle>();
         }
         // Metoder

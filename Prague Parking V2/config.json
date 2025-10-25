@@ -1,0 +1,13 @@
+{
+  "GarageNrOfSpots": 100,
+  "VehicleTypeInfo": {
+    "Car": {
+      "SizeRequired": 4,
+      "VehiclesPerSpot": 1
+    },
+    "MC": {
+      "SizeRequired": 2,
+      "VehiclesPerSpot": 2
+    }
+  }
+}
