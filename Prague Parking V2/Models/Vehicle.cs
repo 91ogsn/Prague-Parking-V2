@@ -13,7 +13,9 @@ namespace Prague_Parking_V2.Models
         public DateTime ArrivalTime { get; set; } = DateTime.Now;
         public Decimal PricePerHour { get; set; }
 
-        
+        public VehicleType VehicleType { get; set; }
+
+
 
         // Constructor
         public Vehicle(string regNumber)

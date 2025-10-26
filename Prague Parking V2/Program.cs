@@ -1,6 +1,10 @@
-﻿using DataAccessLibrary;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
+using DataAccessLibrary;
 using Prague_Parking_V2;
-using System.Text.Json;
+
+
 using Spectre.Console;
 using Prague_Parking_V2.Models;
 // att göra
@@ -16,7 +20,7 @@ public class Program
         // ===== Filsökvägar ===== \\
         string configFilePath = "../../../config.json";
         string priceListFilePath = "../../../pricelist.json";
-        //string garageDataFilePath = "../../../parkinggarage_data.json";
+        string garageFilePath = "../../../garage.json";
 
         //Skapa Config och Ladda konfigurationsfil
         Config config = new Config();
@@ -30,7 +34,7 @@ public class Program
             Console.WriteLine("Could not find konfigurationfile! Creating a default config");
             MinaFiler.SaveToFile<Config>(configFilePath, config); //save default to json file 
         }
-        
+
         //Skapa PriceConfig och Ladda prislista
         PriceConfigData priceConfig = new PriceConfigData();
         if (File.Exists(priceListFilePath))
@@ -43,17 +47,90 @@ public class Program
             Console.WriteLine("Could not find pricelist file! Creating a default config");
             MinaFiler.SaveToFile<PriceConfigData>(priceListFilePath, priceConfig); //save defaultPricelist to json file 
         }
-
-        
         Console.ReadKey();
+
         //Visa konfigurationsdata i konsolen
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
+        Console.ReadKey();
+        Console.Clear();
 
+        //Skapa ParkingGarage 
+        ParkingGarage garage = new ParkingGarage(config);
+        //garage.ParkVehicle(new Car("AAA111", config, priceConfig));
+        Console.WriteLine(garage);
+        
+        Console.ReadKey();
+        //Clear all in console
+        Console.Clear();
 
+        /* 
+         garage.ParkVehicle(new Car("ABC123", config, priceConfig));
+         garage.ParkVehicle(new Mc("MCA001", config, priceConfig));
+         garage.ParkVehicle(new Mc("MCB002", config, priceConfig));
+         garage.ParkVehicle(new Car("XYZ789", config, priceConfig));
+         garage.ParkVehicle(new Mc("MCT003", config, priceConfig));
+         //Spara garage data till Json -fil
+         MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage);*/
+        
+        //Ladda garage data från Json -fil
+        if (File.Exists(garageFilePath))
+        {
+            ParkingGarage loadedGarage = new ParkingGarage(config);
+            loadedGarage = MinaFiler.LoadFromFile<ParkingGarage>(garageFilePath);
+                     
+                       
+            
+            Console.ReadKey();
+            //Loopa igenom loadedGarage och lägg till fordonen i garage
+            for (int i = 0; i < garage.Garage.Count; i++)
+            {
+                if (loadedGarage.Garage[i].ParkedVehicles != null)
+                {
+                    //Lägg till fordonen i garage
+                    foreach (var vehicle in loadedGarage.Garage[i].ParkedVehicles)
+                    {
+                        if (vehicle.VehicleType == VehicleType.Car)
+                        {
+                            Car car = new Car(vehicle.RegNumber, config, priceConfig)
+                            {
+                                ArrivalTime = vehicle.ArrivalTime
+                            };
+                            garage.Garage[i].AddVehicle(car);
 
+                        }
+                        else if (vehicle.VehicleType == VehicleType.MC)
+                        {
+                            Mc mc = new Mc(vehicle.RegNumber, config, priceConfig)
+                            {
+                                ArrivalTime = vehicle.ArrivalTime
+                            };
+                            garage.Garage[i].AddVehicle(mc);
+
+                        }
+
+                    }
+                }
+            }
+            
+            AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
+            Console.WriteLine(garage);
+            Console.ReadKey();
+        }
+        else
+        {
+            Console.WriteLine("Could not find garage data file! Creating a default garage");
+            MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage); //save default garage to json file
+        }
+        
 
         Console.ReadKey();
+
+        Console.WriteLine(garage);
+
+
+
+
 
 
 

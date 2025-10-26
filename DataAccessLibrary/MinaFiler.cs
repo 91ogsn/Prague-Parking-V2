@@ -13,12 +13,17 @@ public class MinaFiler
     
 
 
-    // Metod för att ladda Configdata från en JSON-fil
+    // Metod för att ladda data från en JSON-fil
     public static T? LoadFromFile<T>(string fileName)
     {
         
         try
         {
+            var opptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true
+            };
             string json = File.ReadAllText(fileName);
             return JsonSerializer.Deserialize<T>(json);
         }

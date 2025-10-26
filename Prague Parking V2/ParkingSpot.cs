@@ -13,7 +13,7 @@ namespace Prague_Parking_V2
         public int SpotSize { get; set; } = 4; // Storlek på P-platsen i antal parkeringsenheter
         public int AvailableSize { get; set; } = 4; // Tillgänglig storlek på P-platsen
 
-        public List<Vehicle> ParkedVehicles { get; set; }
+        public List<Vehicle> ParkedVehicles { get; set; } // Lista över parkerade fordon på parkeringsplatsen
 
         // Constructor
         public ParkingSpot(int spotNumber)
@@ -46,6 +46,17 @@ namespace Prague_Parking_V2
                     return true;
             }
             return false;
+        }
+        public override string ToString()
+        {
+            StringBuilder info = new StringBuilder();
+            info.AppendLine($"SpotNr: {SpotNumber}, ParkedVehicles: {ParkedVehicles.Count}, AvailableSize: {AvailableSize}");
+            foreach (var vehicle in ParkedVehicles)
+            {
+                
+                info.AppendLine($" Type: {vehicle.VehicleType}, RegNr: {vehicle.RegNumber}, Size: {vehicle.Size}, ArrivalTime: {vehicle.ArrivalTime}, PricePerHour: {vehicle.PricePerHour}");
+            }
+            return info.ToString();
         }
 
     }

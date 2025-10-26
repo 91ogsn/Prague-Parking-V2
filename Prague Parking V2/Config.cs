@@ -9,10 +9,7 @@ namespace Prague_Parking_V2
 {
     public class Config
     {
-        /*I konfigurationsfilen skall man kunna konfigurera
-            o Antal P-platser i garaget
-            o Fordonstyper(Bil och MC, men det kan komma fler)
-            o Antal fordon per P-plats för respektive fordonstyp*/
+        
 
         // Properties
         public int GarageNrOfSpots { get; set; } = 100; // Antal P-platser för garaget
@@ -47,5 +44,11 @@ namespace Prague_Parking_V2
         public int SizeRequired { get; set; } // Storlek på fordonet i antal parkeringsenheter
         public int VehiclesPerSpot { get; set; } // Antal fordon per P-plats
 
+    }
+    public enum VehicleType
+    {
+        Car,
+        MC
+        
     }
 }
