@@ -1,11 +1,12 @@
-﻿using Prague_Parking_V2.Models;
-using DataAccessLibrary;
+﻿using DataAccessLibrary;
+using Prague_Parking_V2.Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
-using System.Text;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Prague_Parking_V2
 {
@@ -44,14 +45,80 @@ namespace Prague_Parking_V2
             return info.ToString();
         }
 
-        //TODO: Save Garage to file method
+        //Save Garage to file metod
+        public static void SaveGarageToFile(ParkingGarage garage)
+        {
+            string garageFilePath = "../../../garage.json";
+            MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage);
+            AnsiConsole.MarkupLine($"[green]Garage saved to file successfully![/]");
+        }
+        //Load Garage from file metod
+        public static ParkingGarage LoadGarageFromFile(ParkingGarage garage, Config config)
+        {
+            string garageFilePath = "../../../garage.json";
+            if (File.Exists(garageFilePath))
+            {
+                ParkingGarage loadedGarage = new ParkingGarage(config);
+                loadedGarage = MinaFiler.LoadFromFile<ParkingGarage>(garageFilePath);
+
+                //Loopa igenom loadedGarage och lägg till fordonen i garage
+                for (int i = 0; i < garage.Garage.Count; i++)
+                {
+                    //Kolla om det finns fordon i parkeringsplatsen, clearar och återställer AvailableSize
+                    if (garage.Garage[i].ParkedVehicles != null)
+                    {
+                        garage.Garage[i].ParkedVehicles.Clear();
+                        garage.Garage[i].AvailableSize = garage.Garage[i].SpotSize;
+                    }
+
+                    if (loadedGarage.Garage[i].ParkedVehicles != null)
+                    {
+                        //Lägg till fordonen i garage
+                        foreach (var vehicle in loadedGarage.Garage[i].ParkedVehicles)
+                        {
+
+                            if (vehicle.VehicleType == VehicleType.Car)
+                            {
+                                Car car = new Car(vehicle.RegNumber, config)
+                                {
+                                    ArrivalTime = vehicle.ArrivalTime
+                                };
+                                garage.Garage[i].AddVehicle(car);
+
+                            }
+                            else if (vehicle.VehicleType == VehicleType.MC)
+                            {
+                                Mc mc = new Mc(vehicle.RegNumber, config)
+                                {
+                                    ArrivalTime = vehicle.ArrivalTime
+                                };
+                                garage.Garage[i].AddVehicle(mc);
+
+                            }
+
+                        }
+                    }
+                }
+
+                AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
+                return garage;
+            }
+            else
+            {
+                Console.WriteLine("Could not find Garage data file! Creating a default garage");
+                MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage); //save default garage to json file
+                return garage;
+            }
+        }
+
+
 
         //Visa garage innehåll Spot nr kompakt med färkodning Grön = tom, Röd = full, Gul = delvis full.
         //varje rad ska vara 10 spots
         public void DisplayCompactGarageOverview()
         {
             
-            AnsiConsole.MarkupLine("[lime]Green: [/]Empty, [yellow]Yellow: [/]Partially full, [red]Red: [/]Full\n");
+            AnsiConsole.MarkupLine("\t([lime]Green: [/]Empty, [yellow]Yellow: [/]Partially full, [red]Red: [/]Full)\n");
             int spotsPerRow = 10;
             for (int i = 0; i < Garage.Count; i++)
             {
@@ -79,6 +146,27 @@ namespace Prague_Parking_V2
                 }
             }
             
+        }
+        //Skriv ut parkerade fordon med Spectre Table's
+        public void DisplayParkedVehicles()
+        {
+            Table table = new Table();
+            table.AddColumn("SpotNr");
+            table.AddColumn("Vehicle Type");
+            table.AddColumn("RegNr");
+            table.AddColumn("Arrival Time");
+            table.Title("[underline cyan1]Parked Vehicles In Garage[/]");
+            table.Border = TableBorder.Rounded;
+            table.BorderColor(Color.Grey);
+            table.ShowRowSeparators();
+            foreach (var spot in Garage)
+            {
+                foreach (var vehicle in spot.ParkedVehicles)
+                {
+                    table.AddRow(spot.SpotNumber.ToString(), vehicle.VehicleType.ToString(), vehicle.RegNumber, vehicle.ArrivalTime.ToString("g"));
+                }
+            }
+            AnsiConsole.Write(table);
         }
 
 
