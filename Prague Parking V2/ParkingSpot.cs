@@ -54,7 +54,7 @@ namespace Prague_Parking_V2
             foreach (var vehicle in ParkedVehicles)
             {
                 
-                info.AppendLine($" Type: {vehicle.VehicleType}, RegNr: {vehicle.RegNumber}, Size: {vehicle.Size}, ArrivalTime: {vehicle.ArrivalTime}, PricePerHour: {vehicle.PricePerHour}");
+                info.AppendLine($" Type: {vehicle.VehicleType}, RegNr: {vehicle.RegNumber}, Size: {vehicle.Size}, ArrivalTime: {vehicle.ArrivalTime}");
             }
             return info.ToString();
         }

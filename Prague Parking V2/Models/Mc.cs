@@ -8,10 +8,10 @@ namespace Prague_Parking_V2.Models
     public class Mc : Vehicle
     {
         
-        public Mc(string regNumber, Config config, PriceConfigData priceConfig) : base(regNumber)
+        public Mc(string regNumber, Config config) : base(regNumber)
         {
             Size = config.VehicleTypeInfo["MC"].SizeRequired; //hämtas från konfigurationsfil
-            PricePerHour = priceConfig.MC;                    //PridPerHour skall hämtas från prislista
+                               
             VehicleType = VehicleType.MC;
         }
 
