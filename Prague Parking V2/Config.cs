@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLibrary;
+using Prague_Parking_V2.Models;
 
 namespace Prague_Parking_V2
 {
@@ -14,6 +15,7 @@ namespace Prague_Parking_V2
         // Properties
         public int GarageNrOfSpots { get; set; } = 100; // Antal P-platser för garaget
         public Dictionary<string, VehicleTypeInfo> VehicleTypeInfo { get; set; }
+        
 
         public Config()
         {

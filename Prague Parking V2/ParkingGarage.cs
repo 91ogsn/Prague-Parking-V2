@@ -181,12 +181,12 @@ namespace Prague_Parking_V2
                 if (Garage[i].IsThereRoomForVehicle(vehicle))
                 {
                     Garage[i].AddVehicle(vehicle);
-                    AnsiConsole.MarkupLine($"[green]Park {vehicle.GetType().Name} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\nPress any key to return...");
+                    AnsiConsole.MarkupLine($"[green]Park {vehicle.VehicleType} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\nPress any key to return...");
                     Console.ReadKey();
                     return; // Fordonet parkerades framgångsrikt
                 }
             }
-            AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.GetType().Name} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\nPress any key to return...");
+            AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.VehicleType} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\nPress any key to return...");
             Console.ReadKey();
             return; // Ingen ledig plats hittades
 

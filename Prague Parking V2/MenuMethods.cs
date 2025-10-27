@@ -17,7 +17,7 @@ public class MenuMethods
     public void MainMenu(ParkingGarage garage, Config config, PriceConfigData priceConfig)
     {
         bool exit = false;
-        
+
         while (exit == false)
         {
             Console.Clear();
@@ -45,6 +45,7 @@ public class MenuMethods
             new SelectionPrompt<string>()
             .Title(" [grey]Navigate with Arrowkeys, select with Enterkey[/]")
             .PageSize(7)
+            .WrapAround(true)
             .AddChoices(
                 "1. Park Vehicle",
                 "2. Checkout Vehicle",
@@ -61,7 +62,8 @@ public class MenuMethods
             {
                 case '1':
                     // Call method to park vehicle
-
+                    MenuParkVehicle(garage, config);
+                    //TODO: spara garage till fil efter parkering
                     break;
                 case '2':
                     // Call method to retrieve vehicle
@@ -80,6 +82,7 @@ public class MenuMethods
                     // Call method to load price list
                     break;
                 case '7':
+                    Console.Clear();
                     AnsiConsole.MarkupLine("[bold green]Thanks for using Prague Parking 2.0[/]");
                     exit = true;
                     return;
@@ -93,5 +96,42 @@ public class MenuMethods
         garage.DisplayParkedVehicles();
         AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
         Console.ReadKey();
+    }
+    //Parkera fordon
+    public static void MenuParkVehicle(ParkingGarage garage, Config config)
+    {
+        //Fråga anv efter fordonstyp
+        Console.Clear();
+        string[] vehicleTypes = new string[] { "Car", "MC" };
+        string choiceVehicleType = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Select what Vehicle Type you want to Park:")
+            .WrapAround(true)
+            .AddChoices(vehicleTypes)
+            );
+        //Fråga anv efter registreringsnummer
+        string regNr = AnsiConsole.Prompt(
+                new TextPrompt<string>("Enter [green]Registration Number[/]:")
+            .Validate(regNr =>
+            {
+                // Kolla om string innehåller whitespace eller är tom
+                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
+                }
+                // Kolla om string är längre än 10 tecken
+                if (regNr.Length > 10)
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
+                }
+                return ValidationResult.Success();
+
+            })
+            );
+        Console.WriteLine("Du tog dig hit");
+        Console.ReadKey();
+        //Skapa fordon baserat på val
+
+
     }
 }
