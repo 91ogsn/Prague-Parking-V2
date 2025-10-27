@@ -1,5 +1,5 @@
 {
-  "GarageNrOfSpots": 15,
+  "GarageNrOfSpots": 100,
   "VehicleTypeInfo": {
     "Car": {
       "SizeRequired": 4,

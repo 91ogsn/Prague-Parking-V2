@@ -52,18 +52,15 @@ public class Program
         //Visa konfigurationsdata i konsolen
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
-        Console.ReadKey();
-        Console.Clear();
-
+       
         //Skapa ParkingGarage 
         ParkingGarage garage = new ParkingGarage(config);
         //garage.ParkVehicle(new Car("AAA111", config, priceConfig));
-        Console.WriteLine(garage);
-        
-        Console.ReadKey();
-        //Clear all in console
-        Console.Clear();
-
+        //garage.ParkVehicle(new Mc("BBB111", config, priceConfig));
+        //garage.ParkVehicle(new Mc("CCC111", config, priceConfig));
+        //Console.WriteLine(garage);
+                     
+                
         /* 
          garage.ParkVehicle(new Car("ABC123", config, priceConfig));
          garage.ParkVehicle(new Mc("MCA001", config, priceConfig));
@@ -78,18 +75,25 @@ public class Program
         {
             ParkingGarage loadedGarage = new ParkingGarage(config);
             loadedGarage = MinaFiler.LoadFromFile<ParkingGarage>(garageFilePath);
-                     
-                       
-            
-            Console.ReadKey();
+                    
+                   
+                        
             //Loopa igenom loadedGarage och lägg till fordonen i garage
             for (int i = 0; i < garage.Garage.Count; i++)
             {
+                //Kolla om det finns fordon i parkeringsplatsen, clearar och återställer AvailableSize
+                if (garage.Garage[i].ParkedVehicles != null)
+                {
+                    garage.Garage[i].ParkedVehicles.Clear();
+                    garage.Garage[i].AvailableSize = garage.Garage[i].SpotSize;
+                }
+
                 if (loadedGarage.Garage[i].ParkedVehicles != null)
                 {
                     //Lägg till fordonen i garage
                     foreach (var vehicle in loadedGarage.Garage[i].ParkedVehicles)
                     {
+
                         if (vehicle.VehicleType == VehicleType.Car)
                         {
                             Car car = new Car(vehicle.RegNumber, config, priceConfig)
@@ -114,7 +118,6 @@ public class Program
             }
             
             AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
-            Console.WriteLine(garage);
             Console.ReadKey();
         }
         else
@@ -123,24 +126,11 @@ public class Program
             MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage); //save default garage to json file
         }
         
-
         Console.ReadKey();
-
-        Console.WriteLine(garage);
-
-
-
-
-
-
-
-
-
-
-
+        
         //kör metod för menyn
-        //MenuMethods menu = new MenuMethods();
-        //menu.MainMenu();
+        MenuMethods menu = new MenuMethods();
+        menu.MainMenu();
 
 
         Console.WriteLine("\n\nPress any key to exit...");
