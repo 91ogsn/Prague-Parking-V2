@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spectre.Console;
+using Prague_Parking_V2.Models;
+using DataAccessLibrary;
+using Prague_Parking_V2;
 
 namespace Prague_Parking_V2
 {
@@ -10,29 +13,31 @@ namespace Prague_Parking_V2
     public class MenuMethods
     {
         // Visa huvudmenyn med
-        public void MainMenu()
+        public void MainMenu(ParkingGarage garage)
         {
-            while (true)
+            bool exit = false;
+
+            while (exit == false)
             {
                 Console.Clear();
-
+                //Rubrik med FigletText från Spectre
                 AnsiConsole.Write(
-                    new FigletText("Prague Parking 2.0")
-                    
+                    new FigletText("Prague Parking 2")
                     .Color(Color.Cyan1)
-                    
+                    .LeftJustified()
                     );
-
-                AnsiConsole.WriteLine();
-                // Description panel centered
-                var infoPanel = new Panel("[bold cyan]Welcome to Prague Parking 2.0[/]")
-                {
-                    Border = BoxBorder.Rounded,
-                    Padding = new Padding(2, 1),
-                };
-
-                AnsiConsole.Write(infoPanel.HeaderAlignment(Justify.Center));
-                Console.WriteLine();
+                //Visa kompakt garageöversikt och skapar en linje med Rule från Spectre
+                Rule rulelineOw = new Rule("[grey]Garage Overview[/]");
+                AnsiConsole.Write(
+                    rulelineOw
+                    .LeftJustified()
+                    );
+                garage.DisplayCompactGarageOverview();
+                Rule ruleline = new Rule("[grey]Main Menu[/]");
+                AnsiConsole.Write(
+                    ruleline
+                    .LeftJustified()
+                    );
 
                 //Skapar en menyprompt med Spectre.Console
                 string choice = AnsiConsole.Prompt(
@@ -73,6 +78,7 @@ namespace Prague_Parking_V2
                         break;
                     case '7':
                         AnsiConsole.MarkupLine("[bold green]Thanks for using Prague Parking 2.0[/]");
+                        exit = true;
                         return;
                 }
             }

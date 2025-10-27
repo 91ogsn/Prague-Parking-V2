@@ -15,7 +15,7 @@ using Prague_Parking_V2.Models;
 
 public class Program
 {
-    private static void Main(string[] args)
+    public static void Main(string[] args)
     {
         // ===== Filsökvägar ===== \\
         string configFilePath = "../../../config.json";
@@ -52,16 +52,16 @@ public class Program
         //Visa konfigurationsdata i konsolen
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
-       
+
         //Skapa ParkingGarage 
         ParkingGarage garage = new ParkingGarage(config);
         //garage.ParkVehicle(new Car("AAA111", config));
         //garage.ParkVehicle(new Mc("BBB111", config));
         //garage.ParkVehicle(new Mc("CCC111", config));
-        Console.WriteLine(garage);
-                     
-                
-        
+        //Console.WriteLine(garage);
+
+
+
         // garage.ParkVehicle(new Car("ABC123", config));
         // garage.ParkVehicle(new Mc("MCA001", config));
         // garage.ParkVehicle(new Mc("MCB002", config));
@@ -71,14 +71,14 @@ public class Program
         // MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage);
         //Console.WriteLine("Garage sparat utan pris");
         //Console.ReadKey();
-        
-        
+
+
         //Ladda garage data från Json -fil
         if (File.Exists(garageFilePath))
         {
             ParkingGarage loadedGarage = new ParkingGarage(config);
             loadedGarage = MinaFiler.LoadFromFile<ParkingGarage>(garageFilePath);
-                   
+
             //Loopa igenom loadedGarage och lägg till fordonen i garage
             for (int i = 0; i < garage.Garage.Count; i++)
             {
@@ -117,21 +117,21 @@ public class Program
                     }
                 }
             }
-            
+
             AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
-            Console.ReadKey();
         }
         else
         {
             Console.WriteLine("Could not find garage data file! Creating a default garage");
             MinaFiler.SaveToFile<ParkingGarage>(garageFilePath, garage); //save default garage to json file
         }
-        Console.WriteLine(garage);
+
+        //Console.WriteLine(garage);
         Console.ReadKey();
-        
+
         //kör metod för menyn
         MenuMethods menu = new MenuMethods();
-        menu.MainMenu();
+        menu.MainMenu(garage);
 
 
         Console.WriteLine("\n\nPress any key to exit...");

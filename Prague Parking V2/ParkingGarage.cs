@@ -43,8 +43,44 @@ namespace Prague_Parking_V2
             }
             return info.ToString();
         }
-        
-        
+
+        //TODO: Save Garage to file method
+
+        //Visa garage innehåll Spot nr kompakt med färkodning Grön = tom, Röd = full, Gul = delvis full.
+        //varje rad ska vara 10 spots
+        public void DisplayCompactGarageOverview()
+        {
+            
+            AnsiConsole.MarkupLine("[lime]Green: [/]Empty, [yellow]Yellow: [/]Partially full, [red]Red: [/]Full\n");
+            int spotsPerRow = 10;
+            for (int i = 0; i < Garage.Count; i++)
+            {
+                var spot = Garage[i];
+                string spotInfo = $"|{spot.SpotNumber:D3}| ";
+                if (spot.AvailableSize == spot.SpotSize)
+                {
+                    // Grön för tom plats
+                    AnsiConsole.Markup($"[lime]{spotInfo}[/] ");
+                }
+                else if (spot.AvailableSize == 0)
+                {
+                    // Röd för full plats
+                    AnsiConsole.Markup($"[red]{spotInfo}[/] ");
+                }
+                else
+                {
+                    // Gul för delvis full plats
+                    AnsiConsole.Markup($"[yellow]{spotInfo}[/] ");
+                }
+                // Ny rad efter varje 10 spots
+                if ((i + 1) % spotsPerRow == 0)
+                {
+                    Console.WriteLine();
+                }
+            }
+            
+        }
+
 
 
         /*
@@ -57,11 +93,13 @@ namespace Prague_Parking_V2
                 if (Garage[i].IsThereRoomForVehicle(vehicle))
                 {
                     Garage[i].AddVehicle(vehicle);
-                    AnsiConsole.MarkupLine($"[green]{vehicle.GetType().Name} with RegNr: {vehicle.RegNumber} parked at SpotNr: {Garage[i].SpotNumber}[/]");
+                    AnsiConsole.MarkupLine($"[green]Park {vehicle.GetType().Name} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\nPress any key to return...");
+                    Console.ReadKey();
                     return; // Fordonet parkerades framgångsrikt
                 }
             }
-            AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.GetType().Name} with RegNr: {vehicle.RegNumber}\nGarage is full![/]");
+            AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.GetType().Name} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\nPress any key to return...");
+            Console.ReadKey();
             return; // Ingen ledig plats hittades
 
         }
