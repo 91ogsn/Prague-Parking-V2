@@ -59,9 +59,11 @@ public class Program
         //Visa konfigurationsdata i konsolen
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
+        Console.ReadKey();
 
         //Skapa ParkingGarage 
         ParkingGarage garage = new ParkingGarage(config);
+
         // ===== Parkera några fordon för test ===== \\
         //garage.ParkVehicle(new Car("ABC123", config));
         //garage.ParkVehicle(new Mc("MCA001", config));
@@ -73,6 +75,7 @@ public class Program
 
         //Ladda garage data från Json -fil
         garage = ParkingGarage.LoadGarageFromFile(garage, config);
+
         //Console.WriteLine(garage.ToString());
         // uppdaterar config med den sparade i objektet ifall den har ändrats i LoadGarageFromFile() metoden så att de stämmer överens
         config = garage.Config;

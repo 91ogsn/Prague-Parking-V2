@@ -48,12 +48,18 @@
     {
       "SpotNumber": 4,
       "SpotSize": 4,
-      "AvailableSize": 2,
+      "AvailableSize": 0,
       "ParkedVehicles": [
         {
           "RegNumber": "MCT003",
           "Size": 2,
           "ArrivalTime": "2025-10-27T14:43:28.8539485+01:00",
+          "VehicleType": 1
+        },
+        {
+          "RegNumber": "YYY888",
+          "Size": 2,
+          "ArrivalTime": "2025-10-29T22:24:54.8005883+01:00",
           "VehicleType": 1
         }
       ]
@@ -61,14 +67,28 @@
     {
       "SpotNumber": 5,
       "SpotSize": 4,
-      "AvailableSize": 4,
-      "ParkedVehicles": []
+      "AvailableSize": 0,
+      "ParkedVehicles": [
+        {
+          "RegNumber": "OOO777",
+          "Size": 4,
+          "ArrivalTime": "2025-10-29T22:19:44.8955324+01:00",
+          "VehicleType": 0
+        }
+      ]
     },
     {
       "SpotNumber": 6,
       "SpotSize": 4,
-      "AvailableSize": 4,
-      "ParkedVehicles": []
+      "AvailableSize": 2,
+      "ParkedVehicles": [
+        {
+          "RegNumber": "FFF555",
+          "Size": 2,
+          "ArrivalTime": "2025-10-29T22:25:26.5734223+01:00",
+          "VehicleType": 1
+        }
+      ]
     },
     {
       "SpotNumber": 7,

@@ -64,6 +64,9 @@ public class MenuMethods
                     // Call method to park vehicle
                     MenuParkVehicle(garage, config);
                     //TODO: spara garage till fil efter parkering
+                    ParkingGarage.SaveGarageToFile(garage);
+                    AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+                    Console.ReadKey();
                     break;
                 case '2':
                     // Call method to retrieve vehicle
@@ -128,9 +131,21 @@ public class MenuMethods
 
             })
             );
-        Console.WriteLine("Du tog dig hit");
-        Console.ReadKey();
+        // string regNr to upper case
+        regNr = regNr.ToUpper();
+        
+        Console.Clear();
         //Skapa fordon baserat på val
+        if (choiceVehicleType == "Car")
+        {
+            Car vehicleCar = new Car(regNr, config);
+            garage.ParkVehicle(vehicleCar);
+        }
+        else if (choiceVehicleType == "MC")
+        {
+            Mc vehicleMc = new Mc(regNr, config);
+            garage.ParkVehicle(vehicleMc);
+        }
 
 
     }

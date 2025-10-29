@@ -13,14 +13,14 @@ namespace Prague_Parking_V2;
 public class ParkingGarage
 {
     // Properties
-    public List<ParkingSpot> Garage { get; set; } 
+    public List<ParkingSpot> Garage { get; set; }
     public Config? Config { get; set; }
     public int Size { get; set; }
     // Constructor
-    public ParkingGarage() 
+    public ParkingGarage()
     {
         Garage = new List<ParkingSpot>();
-        
+
     }
     public ParkingGarage(Config config)
     {
@@ -88,7 +88,7 @@ public class ParkingGarage
 
                 //returnerar loadded garage med gammal config
                 return loadedGarage;
-                                }
+            }
             else
             {
 
@@ -132,7 +132,7 @@ public class ParkingGarage
                 }
 
                 AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
-                return garage; 
+                return garage;
             }
         }
         else
@@ -149,7 +149,7 @@ public class ParkingGarage
     //varje rad ska vara 10 spots
     public void DisplayCompactGarageOverview()
     {
-        
+
         AnsiConsole.MarkupLine("\t([lime]Green: [/]Empty, [yellow]Yellow: [/]Partially full, [red]Red: [/]Full)\n");
         int spotsPerRow = 10;
         for (int i = 0; i < Garage.Count; i++)
@@ -177,7 +177,7 @@ public class ParkingGarage
                 Console.WriteLine();
             }
         }
-        
+
     }
     //Skriv ut parkerade fordon med Spectre Table's
     public void DisplayParkedVehicles()
@@ -207,20 +207,21 @@ public class ParkingGarage
     * Parkera ett fordon*/
     public void ParkVehicle(Vehicle vehicle)
     {
-        
+
         for (int i = 0; i < Garage.Count; i++)
         {
             if (Garage[i].IsThereRoomForVehicle(vehicle))
             {
                 Garage[i].AddVehicle(vehicle);
-                AnsiConsole.MarkupLine($"[green]Park {vehicle.VehicleType} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\nPress any key to return...");
-                Console.ReadKey();
+                AnsiConsole.MarkupLine($"[green]Park {vehicle.VehicleType} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\n");
+                
                 return; // Fordonet parkerades framgångsrikt
             }
         }
-        AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.VehicleType} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\nPress any key to return...");
+        // Ingen ledig plats hittades
+        AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.VehicleType} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\n[Grey]Press any key to return...[/]");
         Console.ReadKey();
-        return; // Ingen ledig plats hittades
+        return;
 
     }
 
