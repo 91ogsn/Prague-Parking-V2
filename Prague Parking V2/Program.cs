@@ -8,9 +8,8 @@ using Spectre.Console;
 using Prague_Parking_V2.Models;
 
 
-// 1 Kör metod ladda konfig från fil
-// 2 Kör metod för att ladda parkeringsdata från filer
-// 3 kör metod för att hämta prislista
+// TODO: rensa bort onödiga kommentarer och test kod
+
 
 public class Program
 {
@@ -39,14 +38,24 @@ public class Program
         if (File.Exists(priceListFilePath))
         {
             priceConfig = MinaFiler.LoadFromFile<PriceConfigData>(priceListFilePath);
-            AnsiConsole.MarkupLine($"[green]Pricelist loaded successful[/]");
+
+            if (priceConfig == null)
+            {
+                priceConfig = new PriceConfigData(); //om inläsningen misslyckas, skapa en ny default prislista
+                AnsiConsole.MarkupLine($"[red]Failed to load pricelist, created default pricelist[/]");
+                MinaFiler.SaveToFile<PriceConfigData>(priceListFilePath, priceConfig); //save defaultPricelist to json file
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[green]Pricelist loaded successful[/]");
+            }
         }
         else
         {
             Console.WriteLine("Could not find pricelist file! Creating a default config");
             MinaFiler.SaveToFile<PriceConfigData>(priceListFilePath, priceConfig); //save defaultPricelist to json file 
         }
-        
+
         //Visa konfigurationsdata i konsolen
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
@@ -60,15 +69,16 @@ public class Program
         //garage.ParkVehicle(new Car("XYZ789", config));
         //garage.ParkVehicle(new Mc("MCT003", config));
 
-        //Spara garage data till Json -fil
-        //ParkingGarage.SaveGarageToFile(garage);
-        //Console.ReadKey();
+
 
         //Ladda garage data från Json -fil
         garage = ParkingGarage.LoadGarageFromFile(garage, config);
-        
-        Console.ReadKey();
-                
+        //Console.WriteLine(garage.ToString());
+        // uppdaterar config med den sparade i objektet ifall den har ändrats i LoadGarageFromFile() metoden så att de stämmer överens
+        config = garage.Config;
+        //Console.WriteLine(config.ToString());
+
+
         //kör metod för menyn
         MenuMethods menu = new MenuMethods();
         menu.MainMenu(garage, config, priceConfig);
