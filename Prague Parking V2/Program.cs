@@ -37,9 +37,8 @@ public class Program
 
         // === Skapa ParkingGarage  Ladda garage data från Json -fil === \\
         ParkingGarage garage = new ParkingGarage(config);
-
         garage = ParkingGarage.LoadGarageFromFile(garage, config);
-               
+
         config = garage.Config; // uppdaterar config med den sparade i objektet ifall den har ändrats i LoadGarageFromFile() metoden så att de stämmer överens
 
         //Visa konfigurationsdata i konsolen

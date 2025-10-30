@@ -23,5 +23,12 @@ namespace Prague_Parking_V2.Models
             RegNumber = regNumber;
         }
 
+        // Metoder
+        public string CalculateParkingDuration()
+        {
+            TimeSpan timeParked = DateTime.Now - ArrivalTime;
+            return timeParked.ToString(@"dd\.hh\:mm\:ss");
+        }
+
     }
 }

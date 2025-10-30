@@ -140,7 +140,7 @@ public class ParkingGarage
         }
     }
 
-    // === Visa garage innehåll Spot nr kompakt med färkodning === \\
+    // === Visa garage innehåll Spotnr kompakt med färkodning === \\
 
     public void DisplayCompactGarageOverview()
     {
@@ -232,13 +232,32 @@ public class ParkingGarage
         return spotNumber;
     }
 
-    /* Hämta ut ett fordon
+    // === Hämta ut ett fordon === \\
+    public Vehicle? RetrieveAndRemoveVehicle(string regNumber)
+    {
+        foreach (var spot in Garage)
+        {
+            foreach (var vehicle in spot.ParkedVehicles)
+            {
+                if (vehicle.RegNumber.Equals(regNumber, StringComparison.OrdinalIgnoreCase))
+                {
+                    spot.RemoveVehicle(vehicle);
+                    return vehicle; // Returnerar det hittade fordonet
+                }
+            }
+
+        }
+        return null; // Fordonet hittades inte
+    }
+
+    /*
     * Flytta ett fordon
     * 
       
     * Vi behöver även några privata hjälpmetoder:
     * Hitta ledig plats för ett fordon
     * Skapa ett fordon
+    * 
     * Ta fram ett fordon, givet ett regnummer (variant på sökning)
     */
 
