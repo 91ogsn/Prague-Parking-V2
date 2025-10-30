@@ -92,7 +92,7 @@ public class ParkingGarage
             else
             {
                 //Loopa igenom loadedGarage och lägg till fordonen i garage
-                for (int i = 0; i < garage.Garage.Count; i++)
+                for (int i = 0; i < loadedGarage.Garage.Count; i++)
                 {
                     //Kolla om det finns fordon i parkeringsplatsen, clearar och återställer AvailableSize
                     if (garage.Garage[i].ParkedVehicles != null)
@@ -249,11 +249,50 @@ public class ParkingGarage
         }
         return null; // Fordonet hittades inte
     }
+    // === Hämta fordon utan att ta bort === \\
+    public Vehicle? GetVehicleByRegNumber(string regNumber)
+    {
+        foreach (var spot in Garage)
+        {
+            foreach (var vehicle in spot.ParkedVehicles)
+            {
+                if (vehicle.RegNumber.Equals(regNumber, StringComparison.OrdinalIgnoreCase))
+                {
+                    return vehicle; // Returnerar det hittade fordonet
+                }
+            }
+        }
+        return null; // Fordonet hittades inte
+    }
+    // === MoveVehicleToAnotherSpot === \\
+    public bool MoveVehicleToAnotherSpot(string regNrToMove, int currentSpotNumber, int newSpotNumber)
+    {
+        var vehicleToMove = GetVehicleByRegNumber(regNrToMove);
+
+        // kolla om vehicleToMove får plats på den nya platsen
+        int newSpotAvailableSize = Garage[newSpotNumber - 1].AvailableSize; // -1 eftersom listan är 0-indexerad
+        if (vehicleToMove != null && vehicleToMove.Size <= newSpotAvailableSize)
+        {
+            // Ta bort fordonet från den nuvarande platsen
+            Garage[currentSpotNumber - 1].RemoveVehicle(vehicleToMove);
+
+            // Lägg till fordonet på den nya platsen
+            Garage[newSpotNumber - 1].AddVehicle(vehicleToMove);
+
+            return true; // Flytten lyckades
+        }
+        else
+        {
+            return false; // Flytten misslyckades på grund av otillräckligt utrymme
+        }
+    }
+
+
 
     /*
     * Flytta ett fordon
     * 
-      
+
     * Vi behöver även några privata hjälpmetoder:
     * Hitta ledig plats för ett fordon
     * Skapa ett fordon

@@ -34,6 +34,7 @@ public class MenuMethods
                 .LeftJustified()
                 );
             garage.DisplayCompactGarageOverview();
+            Console.WriteLine();
             Rule ruleline = new Rule("[white]Main Menu[/]");
             AnsiConsole.Write(
                 ruleline
@@ -65,7 +66,7 @@ public class MenuMethods
                     MenuParkVehicle(garage, config);
                     //spara garage till fil efter parkering
                     ParkingGarage.SaveGarageToFile(garage);
-                    AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+                    AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
                     Console.ReadKey();
                     break;
                 case '2':
@@ -75,7 +76,8 @@ public class MenuMethods
                     break;
                 case '3':
                     // === Call method to move vehicle === \\
-                    //TODO: add method to move vehicle
+                    MenuMoveVehicle(garage);
+                    ParkingGarage.SaveGarageToFile(garage);
                     break;
                 case '4':
                     // === Call method to search vehicle === \\
@@ -111,27 +113,9 @@ public class MenuMethods
             .WrapAround(true)
             .AddChoices(vehicleTypes)
             );
-        //Fråga anv efter registreringsnummer
-        string regNr = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter [green]Registration Number[/]:")
-            .Validate(regNr =>
-            {
-                // Kolla om string innehåller whitespace eller är tom
-                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
-                {
-                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
-                }
-                // Kolla om string är längre än 10 tecken
-                if (regNr.Length > 10)
-                {
-                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
-                }
-                return ValidationResult.Success();
 
-            })
-            );
-        // string regNr to upper case
-        regNr = regNr.ToUpper();
+        //Fråga anv efter registreringsnummer
+        string regNr = GetRegNrFromUser();
 
         Console.Clear();
         //Skapa fordon baserat på val
@@ -146,30 +130,14 @@ public class MenuMethods
             garage.ParkVehicle(vehicleMc);
         }
     }
+
     // === 2 Checka ut fordon === \\
-    private static void MenuCheckoutVehicle(ParkingGarage garage, PriceConfigData priceConfig)
+    public static void MenuCheckoutVehicle(ParkingGarage garage, PriceConfigData priceConfig)
     {
         Console.Clear();
-        string regNrToCheckout = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter [green]Registration Number[/] to checkout:")
-            .Validate(regNr =>
-            {
-                // Kolla om string innehåller whitespace eller är tom
-                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
-                {
-                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
-                }
-                // Kolla om string är längre än 10 tecken
-                if (regNr.Length > 10)
-                {
-                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
-                }
-                return ValidationResult.Success();
-            })
-            );
-        Console.Clear();
-        // string regNr to upper case
-        regNrToCheckout = regNrToCheckout.ToUpper();
+        AnsiConsole.MarkupLine("[underline white]Vehicle Checkout[/]\n");
+        //Fråga anv efter registreringsnummer att checka ut
+        string regNrToCheckout = GetRegNrFromUser();
 
         int spotIndex = garage.SearchVehicleByRegNumber(regNrToCheckout);
 
@@ -198,7 +166,7 @@ public class MenuMethods
             AnsiConsole.MarkupLine($"Get {vehicleToCheckout.VehicleType} with Registration Number: [yellow]{regNrToCheckout}[/] at Spot Number: [yellow]{spotIndex}[/].");
             AnsiConsole.MarkupLine($" -   Parking Duration: [lime]{parkingDuration}[/]");
             AnsiConsole.MarkupLine($" - Total Parking Cost: [lime]{parkingCost:F2} CZK[/]");
-            AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
             Console.ReadKey();
         }
         else
@@ -210,33 +178,69 @@ public class MenuMethods
         }
 
     }
+
     // === 3 Flytta fordon === \\
-    // 1Get regNr to move, if it exists, 2 ask for new spot number, 3 check if it is valid and has room, 3 then removae from old spot and add to new spot, save garage to file else show error message
-    // === 4 Sök efter fordon === \\
-    public static void SearchForVehicle(ParkingGarage garage)
+    //  save garage to file 
+    public static void MenuMoveVehicle(ParkingGarage garage)
     {
         Console.Clear();
-        //Fråga anv efter registreringsnummer att söka efter
-        string regNrToSearch = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter [green]Registration Number[/] to search for:")
-            .Validate(regNr =>
+        //Fråga anv efter regsnummer på fordon att flytta
+        AnsiConsole.MarkupLine("[underline white]Move Vehicle[/]\n");
+        string regNrToMove = GetRegNrFromUser();
+
+        //Sök efter fordon i garaget om det finns, hämta dess nuvarande plats.
+        int currentSpotNumber = garage.SearchVehicleByRegNumber(regNrToMove);
+        //Vehicle? vehicleToMove = garage.GetVehicleByRegNumber(regNrToMove);
+
+        //Om fordonet inte finns i garaget
+        if (currentSpotNumber == -1)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[red]Vehicle with Registration Number [bold]{regNrToMove}[/] not found in the garage.[/]");
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
+            Console.ReadKey();
+            return;
+        }
+        Console.Clear();
+        //Fråga anv efter ny plats att flytta fordonet till
+        AnsiConsole.MarkupLine($"\n[grey](Desired new spot number must be a number from 1 to {garage.Size})[/]\n");
+        int newSpotNumber = AnsiConsole.Prompt(
+            new TextPrompt<int>("Enter Spot Number to move to:")
+            .Validate(spotNr =>
             {
-                // Kolla om string innehåller whitespace eller är tom
-                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
+                if (spotNr < 1 || spotNr > garage.Size)
                 {
-                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
-                }
-                // Kolla om string är längre än 10 tecken
-                if (regNr.Length > 10)
-                {
-                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
+                    return ValidationResult.Error("[red]Invalid Spot Number. Please enter a valid spot number.[/]");
                 }
                 return ValidationResult.Success();
             })
             );
+        //Kalla på metod som flyttar om de finns plats på den nya platsen
+        bool moveSuccessful = garage.MoveVehicleToAnotherSpot(regNrToMove, currentSpotNumber, newSpotNumber);
+        if (moveSuccessful)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[green]Get Vehicle with Registration Number: [bold]{regNrToMove}[/] from Spot Number: [bold]{currentSpotNumber}[/] and move to Spot Number: [bold]{newSpotNumber}[/].[/]");
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
+            Console.ReadKey();
+        }
+        else
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[red]Could not move Vehicle to Spot Number: [bold]{newSpotNumber}[/]. Not enough space available.[/]");
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
+            Console.ReadKey();
+        }
+    }
+
+    // === 4 Sök efter fordon === \\
+    public static void SearchForVehicle(ParkingGarage garage)
+    {
         Console.Clear();
-        // string regNr to upper case
-        regNrToSearch = regNrToSearch.ToUpper();
+        AnsiConsole.MarkupLine("[underline white]Search for Vehicle[/]\n");
+        //Fråga anv efter registreringsnummer att söka efter
+        string regNrToSearch = GetRegNrFromUser();
+        Console.Clear();
         //Sök efter fordon i garaget
         int spotIndex = garage.SearchVehicleByRegNumber(regNrToSearch);
         if (spotIndex != -1)
@@ -248,10 +252,11 @@ public class MenuMethods
         {
             AnsiConsole.MarkupLine($"[red]Vehicle with Registration Number [bold]{regNrToSearch}[/] not found in the garage.[/]");
         }
-        AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+        AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
         Console.ReadKey();
 
     }
+
     // === 5 Visa parkerade fordon === \\
     public static void ShowParkedVehicles(ParkingGarage garage)
     {
@@ -260,6 +265,7 @@ public class MenuMethods
         AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
         Console.ReadKey();
     }
+
     // === 6 Ladda prislista och skriv ut till anv === \\
     public static void LoadAndPrintPriceList(PriceConfigData priceConfig)
     {
@@ -290,4 +296,30 @@ public class MenuMethods
 
 
     }
+
+    // === Get regNr from user === \\
+    public static string GetRegNrFromUser()
+    {
+        string regNr = AnsiConsole.Prompt(
+                new TextPrompt<string>("Enter [yellow]Registration Number[/]:")
+            .Validate(regNr =>
+            {
+                // Kolla om string innehåller whitespace eller är tom
+                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
+                }
+                // Kolla om string är längre än 10 tecken
+                if (regNr.Length > 10)
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
+                }
+                return ValidationResult.Success();
+            })
+            );
+        // string regNr to upper case
+        regNr = regNr.ToUpper();
+        return regNr;
+    }
+
 }

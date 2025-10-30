@@ -93,6 +93,12 @@
     {
       "SpotNumber": 7,
       "SpotSize": 4,
+      "AvailableSize": 4,
+      "ParkedVehicles": []
+    },
+    {
+      "SpotNumber": 8,
+      "SpotSize": 4,
       "AvailableSize": 0,
       "ParkedVehicles": [
         {
@@ -102,12 +108,6 @@
           "VehicleType": 0
         }
       ]
-    },
-    {
-      "SpotNumber": 8,
-      "SpotSize": 4,
-      "AvailableSize": 4,
-      "ParkedVehicles": []
     },
     {
       "SpotNumber": 9,
