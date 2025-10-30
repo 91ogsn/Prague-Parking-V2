@@ -215,8 +215,8 @@ public class ParkingGarage
         Console.ReadKey();
         return;
     }
-    // === Sök efter fordon i garaget med regnr, return spotnumber (-1 hittade ingen match) === \\
 
+    // === Sök efter fordon i garaget med regnr, return spotnumber (-1 hittade ingen match) === \\
     public int SearchVehicleByRegNumber(string regNumber)
     {
         int spotNumber = -1;
@@ -231,6 +231,7 @@ public class ParkingGarage
         }
         return spotNumber;
     }
+
     /* Hämta ut ett fordon
     * Flytta ett fordon
     * 

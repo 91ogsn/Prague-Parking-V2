@@ -93,8 +93,15 @@
     {
       "SpotNumber": 7,
       "SpotSize": 4,
-      "AvailableSize": 4,
-      "ParkedVehicles": []
+      "AvailableSize": 0,
+      "ParkedVehicles": [
+        {
+          "RegNumber": "DDD444",
+          "Size": 4,
+          "ArrivalTime": "2025-10-30T12:43:47.1551859+01:00",
+          "VehicleType": 0
+        }
+      ]
     },
     {
       "SpotNumber": 8,

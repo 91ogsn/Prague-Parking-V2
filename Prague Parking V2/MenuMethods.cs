@@ -84,7 +84,7 @@ public class MenuMethods
                     break;
                 case '6':
                     // Call method to load price list
-
+                    LoadAndPrintPriceList(priceConfig);
                     break;
                 case '7':
                     Console.Clear();
@@ -95,14 +95,8 @@ public class MenuMethods
         }
     }
     // ===== Other menu methods  ===== \\
-    public static void ShowParkedVehicles(ParkingGarage garage)
-    {
-        Console.Clear();
-        garage.DisplayParkedVehicles();
-        AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
-        Console.ReadKey();
-    }
-    // === Parkera fordon === \\
+
+    // === 1 Parkera fordon === \\
     public static void MenuParkVehicle(ParkingGarage garage, Config config)
     {
         //Fråga anv efter fordonstyp
@@ -149,7 +143,7 @@ public class MenuMethods
             garage.ParkVehicle(vehicleMc);
         }
     }
-    // === Sök efter fordon === \\
+    // === 4 Sök efter fordon === \\
     public static void SearchForVehicle(ParkingGarage garage)
     {
         Console.Clear();
@@ -189,5 +183,42 @@ public class MenuMethods
         Console.ReadKey();
 
     }
+    // === 5 Visa parkerade fordon === \\
+    public static void ShowParkedVehicles(ParkingGarage garage)
+    {
+        Console.Clear();
+        garage.DisplayParkedVehicles();
+        AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+        Console.ReadKey();
+    }
+    // === 6 Ladda prislista och skriv ut till anv === \\
+    public static void LoadAndPrintPriceList(PriceConfigData priceConfig)
+    {
+        //Ladda prislista från fil
+        priceConfig = PriceConfigData.LoadPriceConfigFromFile(priceConfig);
 
+        //Skriv ut prislista till konsolen
+        Console.Clear();
+        //Skapa en tabell med Spectre.Console
+        Table table = new Table();
+        table.AddColumn("Vehicle Type");
+        table.AddColumn("Price per hour (CZK)");
+        table.Title("[underline cyan1]Current Pricelist[/]");
+        table.Border = TableBorder.Rounded;
+        table.BorderColor(Color.Grey);
+        table.ShowRowSeparators();
+        table.AddRow("Car", priceConfig.Car.ToString("F2"));
+        table.AddRow("MC", priceConfig.MC.ToString("F2"));
+        AnsiConsole.Write(table);
+        //Skriv ut gratis parkeringstid i en panel
+        string panelString = $"[lime]First {priceConfig.FreeParkingMinutes} minutes are free of charge.[/]";
+        Panel panel = new(panelString);
+        panel.Border = BoxBorder.Rounded;
+        panel.BorderColor(Color.Grey);
+        AnsiConsole.Write(panel);
+        AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+        Console.ReadKey();
+
+
+    }
 }
