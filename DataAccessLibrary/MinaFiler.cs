@@ -46,7 +46,11 @@ public class MinaFiler
     public static void SaveToFile<T>(string fileName, T data)
     {
         // lägger till indentering för bättre läsbarhet
-        var options = new JsonSerializerOptions { WriteIndented = true };
+        var options = new JsonSerializerOptions 
+        { 
+            WriteIndented = true,
+            IncludeFields = true
+        };
 
         string jsonString = JsonSerializer.Serialize(data, options);
         File.WriteAllText(fileName, jsonString);

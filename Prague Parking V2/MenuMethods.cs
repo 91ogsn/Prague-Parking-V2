@@ -63,7 +63,7 @@ public class MenuMethods
                 case '1':
                     // Call method to park vehicle
                     MenuParkVehicle(garage, config);
-                    //TODO: spara garage till fil efter parkering
+                    //spara garage till fil efter parkering
                     ParkingGarage.SaveGarageToFile(garage);
                     AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
                     Console.ReadKey();
@@ -76,6 +76,7 @@ public class MenuMethods
                     break;
                 case '4':
                     // Call method to search vehicle
+                    SearchForVehicle(garage);
                     break;
                 case '5':
                     // Kalla metod för att visa parkerade fordon
@@ -83,6 +84,7 @@ public class MenuMethods
                     break;
                 case '6':
                     // Call method to load price list
+
                     break;
                 case '7':
                     Console.Clear();
@@ -100,7 +102,7 @@ public class MenuMethods
         AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
         Console.ReadKey();
     }
-    //Parkera fordon
+    // === Parkera fordon === \\
     public static void MenuParkVehicle(ParkingGarage garage, Config config)
     {
         //Fråga anv efter fordonstyp
@@ -133,7 +135,7 @@ public class MenuMethods
             );
         // string regNr to upper case
         regNr = regNr.ToUpper();
-        
+
         Console.Clear();
         //Skapa fordon baserat på val
         if (choiceVehicleType == "Car")
@@ -146,7 +148,46 @@ public class MenuMethods
             Mc vehicleMc = new Mc(regNr, config);
             garage.ParkVehicle(vehicleMc);
         }
+    }
+    // === Sök efter fordon === \\
+    public static void SearchForVehicle(ParkingGarage garage)
+    {
+        Console.Clear();
+        //Fråga anv efter registreringsnummer att söka efter
+        string regNrToSearch = AnsiConsole.Prompt(
+                new TextPrompt<string>("Enter [green]Registration Number[/] to search for:")
+            .Validate(regNr =>
+            {
+                // Kolla om string innehåller whitespace eller är tom
+                if (string.IsNullOrWhiteSpace(regNr) || regNr.Any(char.IsWhiteSpace))
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be empty or whitespace.[/]");
+                }
+                // Kolla om string är längre än 10 tecken
+                if (regNr.Length > 10)
+                {
+                    return ValidationResult.Error("[red]Registration number cannot be longer than 10 characters.[/]");
+                }
+                return ValidationResult.Success();
+            })
+            );
+        Console.Clear();
+        // string regNr to upper case
+        regNrToSearch = regNrToSearch.ToUpper();
+        //Sök efter fordon i garaget
+        int spotIndex = garage.SearchVehicleByRegNumber(regNrToSearch);
+        if (spotIndex != -1)
+        {
 
+            AnsiConsole.MarkupLine($"[green]Vehicle with Registration Number: [bold]{regNrToSearch}[/] found at Spot Number [bold]{spotIndex}[/].[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine($"[red]Vehicle with Registration Number [bold]{regNrToSearch}[/] not found in the garage.[/]");
+        }
+        AnsiConsole.MarkupLine("[grey]Press any key to return to main menu...[/]");
+        Console.ReadKey();
 
     }
+
 }

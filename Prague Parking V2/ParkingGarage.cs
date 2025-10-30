@@ -25,7 +25,7 @@ public class ParkingGarage
     public ParkingGarage(Config config)
     {
         Config = config;
-        Size = config.GarageNrOfSpots; //Storleken på garaget hämtas från konfigfil
+        Size = config.GarageNrOfSpots; //Storleken på garaget hämtas från konfig
         Garage = new List<ParkingSpot>(Size);
         for (int i = 1; i <= Size; i++)
         {
@@ -33,7 +33,7 @@ public class ParkingGarage
         }
     }
 
-    // Metoder
+    // ===== Metoder ===== \\
     public override string ToString()
     {
         StringBuilder info = new StringBuilder();
@@ -44,7 +44,7 @@ public class ParkingGarage
         }
         return info.ToString();
     }
-    // Räkna antalet upptagna platser i garaget
+    // === Räkna antalet upptagna platser i garaget === \\
     public int CountOccupiedSpots()
     {
         int occupiedSpots = 0;
@@ -58,7 +58,7 @@ public class ParkingGarage
         return occupiedSpots;
     }
 
-    //Save Garage to file metod
+    // === Save Garage to file metod === \\
     public static void SaveGarageToFile(ParkingGarage garage)
     {
         string garageFilePath = "../../../garage.json";
@@ -66,7 +66,7 @@ public class ParkingGarage
         AnsiConsole.MarkupLine($"[green]Garage saved to file successfully![/]");
     }
 
-    //Load Garage from file metod
+    // === Load Garage from file metod === \\
     public static ParkingGarage LoadGarageFromFile(ParkingGarage garage, Config config)
     {
         string garageFilePath = "../../../garage.json";
@@ -91,7 +91,6 @@ public class ParkingGarage
             }
             else
             {
-
                 //Loopa igenom loadedGarage och lägg till fordonen i garage
                 for (int i = 0; i < garage.Garage.Count; i++)
                 {
@@ -126,11 +125,9 @@ public class ParkingGarage
                                 garage.Garage[i].AddVehicle(mc);
 
                             }
-
                         }
                     }
                 }
-
                 AnsiConsole.MarkupLine($"[green]Garage data loaded successful[/]");
                 return garage;
             }
@@ -143,10 +140,8 @@ public class ParkingGarage
         }
     }
 
+    // === Visa garage innehåll Spot nr kompakt med färkodning === \\
 
-
-    //Visa garage innehåll Spot nr kompakt med färkodning Grön = tom, Röd = full, Gul = delvis full.
-    //varje rad ska vara 10 spots
     public void DisplayCompactGarageOverview()
     {
 
@@ -179,7 +174,7 @@ public class ParkingGarage
         }
 
     }
-    //Skriv ut parkerade fordon med Spectre Table's
+    // === Skriv ut parkerade fordon till anv (med Spectre Table's) === \\
     public void DisplayParkedVehicles()
     {
         Table table = new Table();
@@ -201,10 +196,7 @@ public class ParkingGarage
         AnsiConsole.Write(table);
     }
 
-
-
-    /*
-    * Parkera ett fordon*/
+    // === Parkera ett fordon (första lediga plats) === \\
     public void ParkVehicle(Vehicle vehicle)
     {
 
@@ -214,7 +206,7 @@ public class ParkingGarage
             {
                 Garage[i].AddVehicle(vehicle);
                 AnsiConsole.MarkupLine($"[green]Park {vehicle.VehicleType} with RegNr: {vehicle.RegNumber} at SpotNr: {Garage[i].SpotNumber}[/]\n");
-                
+
                 return; // Fordonet parkerades framgångsrikt
             }
         }
@@ -222,14 +214,27 @@ public class ParkingGarage
         AnsiConsole.MarkupLine($"[red]No available spot found for {vehicle.VehicleType} with RegNr: {vehicle.RegNumber}\nGarage is full![/]\n[Grey]Press any key to return...[/]");
         Console.ReadKey();
         return;
-
     }
+    // === Sök efter fordon i garaget med regnr, return spotnumber (-1 hittade ingen match) === \\
 
+    public int SearchVehicleByRegNumber(string regNumber)
+    {
+        int spotNumber = -1;
+        foreach (var spot in Garage)
+        {
+            if (spot.CheckForRegNumber(regNumber))
+            {
+                spotNumber = spot.SpotNumber;
+                return spotNumber;
+            }
+
+        }
+        return spotNumber;
+    }
     /* Hämta ut ett fordon
     * Flytta ett fordon
-    * Söka efter fordon (regnummer)
-    * Visa hela husets innehåll
     * 
+      
     * Vi behöver även några privata hjälpmetoder:
     * Hitta ledig plats för ett fordon
     * Skapa ett fordon

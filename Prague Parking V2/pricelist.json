@@ -1,5 +1,8 @@
 {
   "Car": 20,
   "MC": 10,
-  "FreeParkingMinutes": 10
+  "FreeParkingMinutes": 10,
+  "Instructions1": "READ THIS! You can adjust the prices for Cars, Mc and free parking time. ONLY! modify the numbers, do not change the structure of the file.",
+  "Instructions2": "Example format: Car: (Price in CZK per hour) MC: (Price in CZK per hour). FreeParkingMinutes: (Number of free parking minutes)",
+  "Instructions3": "Make sure to save the file after making changes."
 }
