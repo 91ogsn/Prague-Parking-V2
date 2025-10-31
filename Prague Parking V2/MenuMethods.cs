@@ -112,14 +112,17 @@ public class MenuMethods
     {
         //Fråga anv efter fordonstyp
         Console.Clear();
-        string[] vehicleTypes = new string[] { "Car", "MC" };
+        string[] vehicleTypes = new string[] { "Car", "MC", "Exit to Menu..." };
         string choiceVehicleType = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Select what Vehicle Type you want to Park:")
             .WrapAround(true)
             .AddChoices(vehicleTypes)
             );
-
+        if (choiceVehicleType == "Exit to Menu...")
+        {
+            return;
+        }
         //Fråga anv efter registreringsnummer
         string regNr = GetRegNrFromUser();
 
@@ -169,9 +172,16 @@ public class MenuMethods
                 Mc mcVehicle = vehicleToCheckout as Mc;
                 parkingCost = mcVehicle.CalculateParkingCostMc(priceConfig);
             }
-            AnsiConsole.MarkupLine($"Get {vehicleToCheckout.VehicleType} with Registration Number: [yellow]{regNrToCheckout}[/] at Spot Number: [yellow]{spotIndex}[/].");
-            AnsiConsole.MarkupLine($" -   Parking Duration: [lime]{parkingDuration}[/]");
-            AnsiConsole.MarkupLine($" - Total Parking Cost: [lime]{parkingCost:F2} CZK[/]");
+            AnsiConsole.MarkupLine($"Get {vehicleToCheckout.VehicleType} with Registration Number: [yellow]{regNrToCheckout}[/] at Spot Number: [yellow]{spotIndex}[/]\n");
+
+            Table receiptTable = new Table();
+            receiptTable.AddColumn("Reg NR");
+            receiptTable.AddColumn("Parking Duration");
+            receiptTable.AddColumn("Total Cost (CZK)");
+            receiptTable.Border = TableBorder.Rounded;
+            receiptTable.AddRow($"[lime]{regNrToCheckout}[/]", $"[lime]{parkingDuration}[/]", $"[lime]{parkingCost.ToString("F2")}[/]");
+            AnsiConsole.Write(receiptTable);
+            
             AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
             Console.ReadKey();
         }
@@ -202,9 +212,9 @@ public class MenuMethods
         if (currentSpotNumber == -1)
         {
             Console.Clear();
-            AnsiConsole.MarkupLine($"[red]Vehicle with Registration Number [bold]{regNrToMove}[/] not found in the garage.[/]");
-            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
-            Console.ReadKey();
+            AnsiConsole.MarkupLine($"[red]Vehicle with Registration Number [bold]{regNrToMove}[/] not found in the garage.[/]\n");
+            //AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
+            //Console.ReadKey();
             return;
         }
         Console.Clear();
