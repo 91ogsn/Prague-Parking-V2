@@ -28,7 +28,7 @@ public class Program
         config = garage.Config; // uppdaterar config med den sparade i objektet ifall den har ändrats i LoadGarageFromFile() metoden så att de stämmer överens
 
         // === Visa konfigurationsdata i konsolen === \\
-        Console.WriteLine("ConfigFil : {0}", config.ToString());
+        Console.WriteLine("\nConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
         AnsiConsole.MarkupLine("[grey]Press any key to continue to the main menu...[/]");
         Console.ReadKey();

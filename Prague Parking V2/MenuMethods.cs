@@ -21,20 +21,24 @@ public class MenuMethods
         while (exit == false)
         {
             Console.Clear();
+
             //Rubrik med FigletText från Spectre
             AnsiConsole.Write(
                 new FigletText("Prague Parking 2")
                 .Color(Color.Cyan1)
                 .LeftJustified()
                 );
+
             //Visa kompakt garageöversikt och skapar en linje med Rule från Spectre
             Rule rulelineOw = new Rule("[white]Garage Overview[/]");
             AnsiConsole.Write(
                 rulelineOw
                 .LeftJustified()
                 );
+
             garage.DisplayCompactGarageOverview();
             Console.WriteLine();
+
             Rule ruleline = new Rule("[white]Main Menu[/]");
             AnsiConsole.Write(
                 ruleline
@@ -182,7 +186,7 @@ public class MenuMethods
     }
 
     // === 3 Flytta fordon === \\
-    //  save garage to file 
+    
     public static void MenuMoveVehicle(ParkingGarage garage)
     {
         Console.Clear();
@@ -223,8 +227,7 @@ public class MenuMethods
         {
             Console.Clear();
             AnsiConsole.MarkupLine($"[green]Get Vehicle with Registration Number: [bold]{regNrToMove}[/] from Spot Number: [bold]{currentSpotNumber}[/] and move to Spot Number: [bold]{newSpotNumber}[/].[/]");
-            AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
-            Console.ReadKey();
+            
         }
         else
         {
