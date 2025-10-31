@@ -17,7 +17,6 @@ public class Program
         Config config = new Config();
         config = Config.LoadConfig(config);
 
-
         // === Skapa PriceConfig och Ladda sparade prislista === \\
         PriceConfigData priceConfig = new PriceConfigData();
         priceConfig = PriceConfigData.LoadPriceConfigFromFile(priceConfig);

@@ -90,18 +90,17 @@ public class MenuMethods
                     SearchForVehicle(garage);
                     break;
                 case '5':
-                    // Kalla metod för att visa parkerade fordon
+                    // === Kalla metod för att visa parkerade fordon === \\
                     ShowParkedVehicles(garage);
                     break;
                 case '6':
-                    // Call method to load price list
+                    // === Call method to load price list and print to user === \\
                     LoadAndPrintPriceList(priceConfig);
                     break;
                 case '7':
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[bold green]Thanks for using Prague Parking 2.0[/]");
-                    exit = true;
-                    return;
+                    // === Exit program === \\                    
+                    exit = ConfirmExit();
+                    break;
             }
         }
     }
@@ -335,6 +334,34 @@ public class MenuMethods
         // string regNr to upper case
         regNr = regNr.ToUpper();
         return regNr;
+    }
+
+    // === Exit program === \\
+   
+    public static bool ConfirmExit()
+    {
+        Console.Clear();
+        bool exitConfirmed;
+        //Fråga anv om den är säker på att den vill avsluta
+        string[] exitChoices = new string[] { "Yes", "No"};
+        string exitChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Are you sure you want to exit the program?")
+            .WrapAround(true)
+            .AddChoices(exitChoices)
+            );
+        if (exitChoice == "Yes")
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[bold green]Thanks for using Prague Parking 2.0[/]\n\n[grey]Made by: Stefan Östling[/]");
+            Console.ReadKey();
+            exitConfirmed = true;
+        }
+        else
+        {
+            exitConfirmed = false;
+        }
+        return exitConfirmed;
     }
 
 }
