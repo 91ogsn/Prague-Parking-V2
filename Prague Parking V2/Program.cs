@@ -8,39 +8,26 @@ using Spectre.Console;
 using Prague_Parking_V2.Models;
 
 
-// TODO: rensa bort onödiga kommentarer och test kod
-
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        // ===== Filsökvägar ===== \\
-        string configFilePath = "../../../config.json";
-
         // === Skapa Config och Ladda konfigurationsfil === \\
         Config config = new Config();
-        if (File.Exists(configFilePath))
-        {
-            config = MinaFiler.LoadFromFile<Config>(configFilePath);
-            AnsiConsole.MarkupLine($"[green]Config loaded successful[/]");
-        }
-        else
-        {
-            Console.WriteLine("Could not find konfigurationfile! Creating a default config");
-            MinaFiler.SaveToFile<Config>(configFilePath, config); //save default to json file 
-        }
+        config = Config.LoadConfig(config);
 
-        // === Skapa PriceConfig och Ladda sparade priceconfig prislista
+
+        // === Skapa PriceConfig och Ladda sparade prislista === \\
         PriceConfigData priceConfig = new PriceConfigData();
         priceConfig = PriceConfigData.LoadPriceConfigFromFile(priceConfig);
 
-        // === Skapa ParkingGarage  Ladda garage data från Json -fil === \\
+        // === Skapa ParkingGarage och Ladda garage data  === \\
         ParkingGarage garage = new ParkingGarage(config);
         garage = ParkingGarage.LoadGarageFromFile(garage, config);
         config = garage.Config; // uppdaterar config med den sparade i objektet ifall den har ändrats i LoadGarageFromFile() metoden så att de stämmer överens
 
-        //Visa konfigurationsdata i konsolen
+        // === Visa konfigurationsdata i konsolen === \\
         Console.WriteLine("ConfigFil : {0}", config.ToString());
         Console.WriteLine(priceConfig.ToString());
         AnsiConsole.MarkupLine("[grey]Press any key to continue to the main menu...[/]");
@@ -50,9 +37,8 @@ public class Program
         MenuMethods menu = new MenuMethods();
         menu.MainMenu(garage, config, priceConfig);
 
-
-        Console.WriteLine("\n\nPress any key to exit...");
-        Console.ReadKey();
+        //Console.WriteLine("\n\nPress any key to exit...");
+        //Console.ReadKey();
 
     }
 }

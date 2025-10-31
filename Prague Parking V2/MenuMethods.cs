@@ -78,6 +78,8 @@ public class MenuMethods
                     // === Call method to move vehicle === \\
                     MenuMoveVehicle(garage);
                     ParkingGarage.SaveGarageToFile(garage);
+                    AnsiConsole.MarkupLine("\n[grey]Press any key to return to main menu...[/]");
+                    Console.ReadKey();
                     break;
                 case '4':
                     // === Call method to search vehicle === \\
